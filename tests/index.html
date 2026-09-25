@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Tests - Tic-Tac-Toe Shift</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1e1e2e 0%, #2d2d44 100%);
+            color: #e0e0e0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #2d2d44;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .output {
+            background: #1e1e2e;
+            border-left: 3px solid #667eea;
+            padding: 20px;
+            border-radius: 4px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .test-pass {
+            color: #4ade80;
+        }
+
+        .test-fail {
+            color: #f87171;
+        }
+
+        .test-info {
+            color: #60a5fa;
+        }
+
+        .summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #3d3d5c;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .summary.success {
+            border-left: 4px solid #4ade80;
+        }
+
+        .summary.failure {
+            border-left: 4px solid #f87171;
+        }
+
+        .pass-count {
+            color: #4ade80;
+        }
+
+        .fail-count {
+            color: #f87171;
+        }
+
+        .total-count {
+            color: #667eea;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .board-display {
+            background: #1e1e2e;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #60a5fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Tic-Tac-Toe Shift - Test Suite</h1>
+        <p class="subtitle">Comprehensive test coverage for board shifting, win conditions, and game mechanics</p>
+
+        <div class="controls">
+            <button onclick="runAllTests()">▶️ Run All Tests</button>
+            <button onclick="clearOutput()">🗑️ Clear Output</button>
+        </div>
+
+        <div class="output" id="output">
+            <div class="test-info">Output will appear here...</div>
+        </div>
+    </div>
+
+    <script src="game.test.js"></script>
+    <script>
+        const outputDiv = document.getElementById('output');
+
+        function log(message, type = 'info') {
+            const className = type === 'pass' ? 'test-pass' :
+                             type === 'fail' ? 'test-fail' :
+                             type === 'info' ? 'test-info' : '';
+
+            const line = document.createElement('div');
+            line.className = className;
+            line.textContent = message;
+            outputDiv.appendChild(line);
+            outputDiv.scrollTop = outputDiv.scrollHeight;
+        }
+
+        function clearOutput() {
+            outputDiv.innerHTML = '';
+        }
+
+        function runAllTests() {
+            clearOutput();
+
+            log('🧪 Tic-Tac-Toe Shift Game - Test Suite\n', 'info');
+            log('='.repeat(60), 'info');
+
+            let passedTests = 0;
+            let failedTests = 0;
+
+            tests.forEach((test, index) => {
+                try {
+                    test.fn();
+                    log(`✅ PASS: ${test.name}`, 'pass');
+                    passedTests++;
+                } catch (error) {
+                    log(`❌ FAIL: ${test.name}`, 'fail');
+                    log(`   Error: ${error.message}`, 'fail');
+                    failedTests++;
+                }
+            });
+
+            log('\n' + '='.repeat(60), 'info');
+
+            const summaryClass = failedTests === 0 ? 'success' : 'failure';
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = `summary ${summaryClass}`;
+            summaryDiv.innerHTML = `
+                📊 Results: <span class="pass-count">${passedTests} passed</span>,
+                <span class="fail-count">${failedTests} failed</span> out of
+                <span class="total-count">${tests.length} tests</span>
+            `;
+            outputDiv.appendChild(summaryDiv);
+
+            if (failedTests === 0) {
+                log('\n🎉 All tests passed!', 'pass');
+            } else {
+                log(`\n⚠️ ${failedTests} test(s) failed`, 'fail');
+            }
+
+            outputDiv.scrollTop = 0;
+        }
+
+        // Auto-run on page load
+        window.addEventListener('load', () => {
+            runAllTests();
+        });
+    </script>
+</body>
+</html>

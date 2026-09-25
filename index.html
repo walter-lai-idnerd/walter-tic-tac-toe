@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic-Tac-Toe</title>
+    <title>Tic-Tac-Toe Shift</title>
     <style>
         * {
             margin: 0;
@@ -74,6 +74,13 @@
 
         body.mid-autumn .player-info {
             color: #c87137;
+        }
+
+        .shift-info {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 15px;
+            min-height: 20px;
         }
 
         .board {
@@ -224,6 +231,19 @@
         .confetti.falling {
             animation: fall 3s linear forwards;
         }
+
+        @keyframes shift-flash {
+            0%, 100% {
+                background: white;
+            }
+            50% {
+                background: #fff3cd;
+            }
+        }
+
+        .cell.shifting {
+            animation: shift-flash 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -232,8 +252,9 @@
     </div>
 
     <div class="container">
-        <h1>Tic-Tac-Toe</h1>
+        <h1>Tic-Tac-Toe Shift</h1>
         <div class="player-info">Current Player: <span id="currentPlayer">X</span></div>
+        <div class="shift-info" id="shiftInfo"></div>
         <div class="board" id="board">
             <button class="cell" data-index="0"></button>
             <button class="cell" data-index="1"></button>
@@ -262,11 +283,13 @@
         const resultMessage = document.getElementById('resultMessage');
         const resultContent = document.getElementById('resultContent');
         const themeToggle = document.getElementById('themeToggle');
+        const shiftInfo = document.getElementById('shiftInfo');
 
         let gameState = ['', '', '', '', '', '', '', '', ''];
         let currentPlayer = 'X';
         let gameActive = true;
         let isMidAutumnTheme = false;
+        let shiftCount = 0;
 
         const winConditions = [
             [0, 1, 2],
@@ -300,6 +323,66 @@
             return gameState.every(cell => cell !== '');
         }
 
+        function shiftBoard(direction) {
+            const newState = [...gameState];
+
+            if (direction === 'right') {
+                // Shift right: discard right column, shift left
+                newState[2] = '';
+                newState[5] = '';
+                newState[8] = '';
+                // Shift elements
+                for (let i = 2; i > 0; i--) {
+                    newState[i] = newState[i - 1];
+                    newState[i + 3] = newState[i + 2];
+                    newState[i + 6] = newState[i + 5];
+                }
+                newState[0] = '';
+                newState[3] = '';
+                newState[6] = '';
+            } else if (direction === 'left') {
+                // Shift left: discard left column
+                newState[0] = '';
+                newState[3] = '';
+                newState[6] = '';
+                // Shift elements
+                for (let i = 0; i < 2; i++) {
+                    newState[i] = newState[i + 1];
+                    newState[i + 3] = newState[i + 4];
+                    newState[i + 6] = newState[i + 7];
+                }
+                newState[2] = '';
+                newState[5] = '';
+                newState[8] = '';
+            } else if (direction === 'down') {
+                // Shift down: discard bottom row
+                newState[6] = '';
+                newState[7] = '';
+                newState[8] = '';
+                // Shift elements
+                for (let i = 8; i >= 3; i--) {
+                    newState[i] = newState[i - 3];
+                }
+                newState[0] = '';
+                newState[1] = '';
+                newState[2] = '';
+            } else if (direction === 'up') {
+                // Shift up: discard top row
+                newState[0] = '';
+                newState[1] = '';
+                newState[2] = '';
+                // Shift elements
+                for (let i = 0; i < 6; i++) {
+                    newState[i] = newState[i + 3];
+                }
+                newState[6] = '';
+                newState[7] = '';
+                newState[8] = '';
+            }
+
+            return newState;
+        }
+
         function createConfetti() {
             for (let i = 0; i < 50; i++) {
                 const confetti = document.createElement('div');
@@ -320,17 +403,44 @@
             }
         }
 
+        function updateBoardDisplay() {
+            cells.forEach((cell, index) => {
+                cell.textContent = gameState[index] ? getDisplaySymbol(gameState[index]) : '';
+                cell.className = 'cell';
+                if (gameState[index]) {
+                    cell.classList.add(gameState[index].toLowerCase());
+                    cell.disabled = true;
+                } else {
+                    cell.disabled = false;
+                }
+            });
+        }
+
+        function performShift() {
+            const directions = ['left', 'right', 'up', 'down'];
+            const direction = directions[shiftCount % 4];
+            shiftCount++;
+
+            gameState = shiftBoard(direction);
+            shiftInfo.textContent = `Board shifted ${direction}! Shift #${shiftCount}`;
+
+            // Flash animation on cells
+            cells.forEach(cell => {
+                cell.classList.add('shifting');
+                setTimeout(() => {
+                    cell.classList.remove('shifting');
+                }, 500);
+            });
+
+            updateBoardDisplay();
+        }
+
         function showResult(winner) {
+            createConfetti();
             resultOverlay.classList.add('show');
 
-            if (winner) {
-                createConfetti();
-                resultMessage.textContent = '🎉 ' + winner + ' Wins! 🎉';
-                resultContent.innerHTML = `<div class="winner-symbol">${getDisplaySymbol(winner)}</div>`;
-            } else {
-                resultMessage.textContent = "It's a Tie!";
-                resultContent.innerHTML = '<p style="font-size: 1.5em; margin-top: 20px;">Well Played!</p>';
-            }
+            resultMessage.textContent = '🎉 ' + winner + ' Wins! 🎉';
+            resultContent.innerHTML = `<div class="winner-symbol">${getDisplaySymbol(winner)}</div><p style="margin-top: 20px; font-size: 1.1em;">After ${shiftCount} board shifts!</p>`;
 
             setTimeout(() => {
                 resetGame();
@@ -342,13 +452,10 @@
             gameState = ['', '', '', '', '', '', '', '', ''];
             currentPlayer = 'X';
             gameActive = true;
+            shiftCount = 0;
+            shiftInfo.textContent = '';
             currentPlayerDisplay.textContent = getDisplaySymbol('X');
-
-            cells.forEach(cell => {
-                cell.textContent = '';
-                cell.disabled = false;
-                cell.classList.remove('x', 'o');
-            });
+            updateBoardDisplay();
         }
 
         function handleCellClick(e) {
@@ -371,8 +478,14 @@
             }
 
             if (isBoardFull()) {
-                gameActive = false;
-                showResult(null);
+                performShift();
+
+                if (checkWin()) {
+                    gameActive = false;
+                    showResult(currentPlayer);
+                    return;
+                }
+
                 return;
             }
 
@@ -403,6 +516,7 @@
         themeToggle.addEventListener('click', toggleTheme);
 
         currentPlayerDisplay.textContent = getDisplaySymbol('X');
+        updateBoardDisplay();
     </script>
 </body>
 </html>
