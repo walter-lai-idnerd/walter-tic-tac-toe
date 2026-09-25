@@ -11,8 +11,8 @@ Walter's Tic-Tac-Toe is a simple, elegant two-player implementation of the class
 1. **Players**: Two players alternate turns (X starts first, then O)
 2. **Board**: 3×3 grid with 9 cells
 3. **Objective**: Get three of your symbols in a row (horizontally, vertically, or diagonally)
-4. **Win Condition**: Three symbols in a line = immediate win with celebration animation
-5. **Tie Condition**: All 9 cells filled with no winner = tie game
+4. **Win Condition**: Three symbols in a line = immediate win with party popper celebration (🎉 confetti animation)
+5. **Tie Condition**: All 9 cells filled with no winner = tie game (popup message, no animation)
 6. **Auto-Reset**: Game automatically restarts 3 seconds after a win or tie
 
 ## Theme Options
@@ -23,7 +23,7 @@ Walter's Tic-Tac-Toe is a simple, elegant two-player implementation of the class
 - Blue accent colors
 
 ### Mid-Autumn Festival Theme
-- X becomes 🧧 (red envelope / hongbao)
+- X becomes 🥮 (moon cake)
 - O becomes 🏮 (lantern)
 - Warm orange/brown gradient background (#d4a574 to #c87137)
 - Themed visual presentation while maintaining game mechanics

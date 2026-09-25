@@ -20,8 +20,8 @@ A player wins by getting three of their symbols in a row:
 - **Diagonal**: Three symbols in a diagonal line (corner to corner)
 
 When a player wins:
-- A celebration animation plays
-- The winning player is announced
+- **Party popper celebration** (🎉) with confetti animation
+- The winning player is announced with animated symbols
 - The game automatically restarts after 3 seconds
 
 ## Tie Game
@@ -29,14 +29,15 @@ When a player wins:
 If all 9 cells are filled and no player has won three in a row, the game is a **Tie**.
 
 When a tie occurs:
-- A tie message is displayed
+- A tie message is displayed ("It's a Tie!")
+- No celebration animation plays
 - The game automatically restarts after 3 seconds
 
 ## Theme Switching
 
 Click the **🌙 Mid-Autumn** button in the top right corner to switch themes:
 - **Normal Theme**: Uses X and O symbols
-- **Mid-Autumn Theme**: X becomes a 🧧 (red envelope) and O becomes a 🏮 (lantern)
+- **Mid-Autumn Theme**: X becomes a 🥮 (moon cake) and O becomes a 🏮 (lantern)
 
 The game mechanics remain exactly the same in both themes - only the visuals change.
 

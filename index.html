@@ -207,10 +207,11 @@
 
         .confetti {
             position: fixed;
-            width: 10px;
-            height: 10px;
-            background: #667eea;
+            width: 30px;
+            height: 30px;
             pointer-events: none;
+            line-height: 30px;
+            text-align: center;
         }
 
         @keyframes fall {
@@ -222,10 +223,6 @@
 
         .confetti.falling {
             animation: fall 3s linear forwards;
-        }
-
-        body.mid-autumn .confetti {
-            background: #d4a574;
         }
     </style>
 </head>
@@ -286,7 +283,7 @@
             if (!isMidAutumnTheme) {
                 return player;
             }
-            return player === 'X' ? '🧧' : '🏮';
+            return player === 'X' ? '🥮' : '🏮';
         }
 
         function checkWin() {
@@ -309,6 +306,8 @@
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + 'vw';
                 confetti.style.top = '-10px';
+                confetti.textContent = '🎉';
+                confetti.style.fontSize = '2em';
                 document.body.appendChild(confetti);
 
                 setTimeout(() => {
@@ -322,10 +321,10 @@
         }
 
         function showResult(winner) {
-            createConfetti();
             resultOverlay.classList.add('show');
 
             if (winner) {
+                createConfetti();
                 resultMessage.textContent = '🎉 ' + winner + ' Wins! 🎉';
                 resultContent.innerHTML = `<div class="winner-symbol">${getDisplaySymbol(winner)}</div>`;
             } else {
