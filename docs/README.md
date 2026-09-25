@@ -14,8 +14,8 @@ Click above to play directly in your browser!
 ## Features
 
 ✨ **Two-player gameplay** - X goes first, players alternate turns  
-🎨 **Theme switching** - Normal mode (X/O) or Mid-Autumn Festival theme (🧧/🏮)  
-🎉 **Celebration animations** - Confetti and animated celebration on win or tie  
+🎨 **Theme switching** - Normal mode (X/O) or Mid-Autumn Festival theme (🥮/🏮)  
+🎉 **Celebration animations** - Party popper confetti on win, popup message on tie  
 ⚡ **Zero build required** - Pure HTML, CSS, and JavaScript  
 📱 **Responsive** - Works on desktop and mobile  
 
